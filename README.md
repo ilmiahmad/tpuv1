@@ -100,7 +100,6 @@ tb/         Verilator / Xcelium testbenches and a UVM environment
 model/      golden models, quantization, MLP and CNN compilers, ISA simulator
 software/   kernel driver, C/Python runtime, board scripts
 soc/vivado/ block design, constraints, build scripts
-scripts/    simulation, synthesis and deploy scripts
 docs/       architecture specification
 ```
 
@@ -113,7 +112,7 @@ python3 model/cnn/test_cnn.py                    # CNN golden model
 python3 software/runtime/tests/test_host.py      # runtime against the mock device
 ```
 
-RTL regressions are in `scripts/` (`*_sim.sh` for Verilator, `*_xrun.csh` for Xcelium). The bitstream is built from `soc/vivado/scripts/`. On the board, load the image with `xmutil` and then run `software/driver/tpu-load.sh`; `/dev/tpu0` appears once the driver binds.
+The bitstream is built from `soc/vivado/scripts/`. On the board, load the image with `xmutil` and then run `software/driver/tpu-load.sh`; `/dev/tpu0` appears once the driver binds.
 
 ## Limitations
 
