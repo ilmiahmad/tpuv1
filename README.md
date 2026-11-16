@@ -22,10 +22,10 @@ AI coding assistants helped with parts of the implementation and tests.
 
 | | |
 |---|---|
-| FPGA | AMD Vivado 2025.2, Kria KV260 (Zynq UltraScale+ XCK26), `xmutil` for loading the PL image |
+| FPGA | AMD Vivado 2025.2, Kria KV260 (Zynq UltraScale+ XCK26)|
 | Simulation | Verilator 5, Cadence Xcelium 24.09 |
-| Verification | UVM, a Python golden model, on-board regression |
-| IP and dependencies | PULP iDMA v0.7.4, PULP AXI, `common_cells`, pinned with Bender |
+| Verification | UVM, a Python golden model, on-board testing |
+| IP and dependencies | PULP iDMA v0.7.4, PULP AXI, Bender |
 | Software | Linux kernel module (Kria Ubuntu), C and Python, NumPy |
 
 ## Design
