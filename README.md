@@ -30,17 +30,50 @@ AI coding assistants helped with parts of the implementation and tests.
 
 ## Design
 
-```
-            host (Cortex-A53, Linux)
-               |  /dev/tpu0
-      HPM0 ----+----> registers, iDMA config
-                       |
-   DDR <-- HP0 <-- iDMA <--> AXI crossbar <--> Unified Buffer (1 MiB)
-                                          <--> Weight FIFO, Instruction FIFO
-                                          <--> Accumulators (128 KiB)
+```mermaid
+flowchart LR
+    subgraph PS["Zynq PS"]
+        CPU["Cortex-A53<br/>Linux, /dev/tpu0"]
+        DDR[("DDR")]
+    end
 
-   instruction FIFO -> decoder -> matrix sequencer -> 16x16 systolic array -> accumulators
-                                -> activation / pooling -> Unified Buffer
+    subgraph PL["PL (100 MHz)"]
+        REG["tpu_regs"]
+        IDMA["iDMA<br/>reg64_2d, 2D midend, rw_axi"]
+        XBAR["AXI crossbar"]
+
+        subgraph MEM["On-chip memories"]
+            UB[("Unified Buffer<br/>1 MiB")]
+            WF[("Weight FIFO")]
+            IF[("Instruction FIFO")]
+            ACC[("Accumulators<br/>128 KiB")]
+        end
+
+        subgraph CORE["tpu_core"]
+            DEC["Decoder"]
+            MM["Matrix sequencer"]
+            SA["16x16 systolic array"]
+            ACT["Activation / pooling"]
+        end
+    end
+
+    CPU -- "HPM0: config" --> REG
+    CPU -- "HPM0: config" --> IDMA
+    IDMA <--> XBAR
+    XBAR <-- "HP0" --> DDR
+    XBAR <--> UB
+    XBAR --> WF
+    XBAR --> IF
+    DEC -- "core DMA requests" --> IDMA
+    IF --> DEC
+    DEC --> MM
+    WF --> SA
+    UB --> MM
+    MM --> SA
+    SA --> ACC
+    ACC --> ACT
+    ACT --> UB
+    CORE -- "irq" --> CPU
 ```
 
 16x16 weight-stationary array, INT8 multiply with INT32 accumulate, 100 MHz (51.2 GOPS peak). Activate does TFLite-style requantization, ReLU/ReLU6 and 2x2 max or average pooling. The instruction set is in `docs/architecture.md`.
