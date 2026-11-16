@@ -105,7 +105,7 @@ docs/       architecture specification
 
 ## Building and running
 
-Dependencies (PULP `axi`, `iDMA` v0.7.4, `common_cells`) are pinned with [Bender](https://github.com/pulp-platform/bender); see `Bender.yml`, `Bender.lock` and `Bender.local`.
+Dependencies (PULP `axi`, `iDMA` v0.7.4) are pinned with [Bender](https://github.com/pulp-platform/bender); see `Bender.yml`, `Bender.lock` and `Bender.local`.
 
 ```
 python3 model/cnn/test_cnn.py                    # CNN golden model
