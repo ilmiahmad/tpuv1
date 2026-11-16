@@ -11,10 +11,10 @@ This started as the systolic-array neural-network accelerator I designed and sim
 This repo is where I took it further, building out the rest of the stack:
 
 - Architecture: follows the TPU v1 paper. A Unified Buffer, weight FIFO, accumulators and an instruction FIFO sit around a 16x16 weight-stationary array.
-- Instruction set: 16-byte instructions (DMA, matmul, convolve, activate, sync, halt). Convolution reads straight from the buffer, no im2col matrix.
+- Instruction set: 16-byte instructions (DMA, matmul, convolve, activate, sync, halt). Convolution reads straight from the buffer.
 - DMA: PULP iDMA, driven by the host or by the accelerator's own decoder, so a whole network starts from one call.
 - Software: a Linux kernel driver, a runtime, and compilers that turn quantized MLP and CNN models into accelerator programs.
-- Verification: a Python golden model that every result has to match bit for bit, in Verilator, Xcelium (UVM) and on the KV260.
+- Verification: a Python golden model that every result has to match bit for bit, in Verilator on the KV260.
 
 AI coding assistants helped with parts of the implementation and tests.
 
