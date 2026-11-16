@@ -55,8 +55,6 @@ Measured on a KV260 at 100 MHz.
 | Resources | 32.2k LUT, 40k FF, 328 DSP48E2, 32 URAM, 44 BRAM36 |
 | Large MLP (`mlp_wide`) | 354 us, 37 GOPS, 72% of peak array utilization |
 | Small MLPs | 67 us (`mlp3`), 153 us (`digits_b128`) |
-| Driver | 119 on-board checks pass; 6,800 jobs/s back to back |
-| CNN | 12 programs (3x3 stride 1/2, multi-tile, 1x1, 5x5, split windows, max/avg pool) match the golden model exactly |
 | Digits MLP | 91.7% on the TPU and in the INT8 golden model, identical on 1000 samples (float: 91.8%) |
 
 Small layers are limited by weight bandwidth, not by the array. Utilization only gets high with large layers or batches.
