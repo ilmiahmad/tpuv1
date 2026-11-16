@@ -1,0 +1,17 @@
+# Bender checkouts (reproduced from Bender.lock + Bender.local)
+.bender/
+# Generated build outputs, tool scratch
+build/
+.Xil/
+*.jou
+*.log
+*.str
+vivado_pid*.zip
+hs_err_pid*.log
+xcelium.d/
+xrun.history
+__pycache__/
+*.pyc
+clockInfo.txt
+cong/
+*.dcp

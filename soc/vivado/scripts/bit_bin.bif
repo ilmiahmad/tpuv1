@@ -1,0 +1,4 @@
+all:
+{
+  tpu_kv260.bit
+}

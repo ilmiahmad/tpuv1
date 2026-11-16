@@ -1,0 +1,87 @@
+package:
+  name: tpu_kv260
+  authors:
+    - "TPU-KV260 project"
+
+# Pinned PULP dependencies (M0, 2026-11-15). Bender.lock is committed; never track master.
+# iDMA v0.7.4 ships pre-generated RTL in target/rtl (reg64_2d is generated with the
+# apb4-flat CPU IF), so no PeakRDL/generator toolchain is needed. axi is pinned to the
+# exact revision iDMA v0.7.4 itself requires, to avoid a second axi version.
+# All transitive deps are pinned to the exact revisions of iDMA v0.7.4's own Bender.lock:
+# iDMA's Bender.yml asks common_cells ^2.0.0-beta.3 while its axi rev asks v2.0.0-beta.2,
+# which does not resolve on its own. Root-level pins override and reproduce upstream CI.
+dependencies:
+  idma:                { git: "https://github.com/pulp-platform/iDMA.git",                version: "=0.7.4" }
+  axi:                 { git: "https://github.com/pulp-platform/axi.git",                 rev: "0ccc838fe06aeeb857eb83c6be9a915c4bf99566" }
+  common_cells:        { git: "https://github.com/pulp-platform/common_cells.git",        rev: "63b7c50d43e462b59506f69d341ff1e40202866d" } # 2.0.0-beta.3
+  common_verification: { git: "https://github.com/pulp-platform/common_verification.git", rev: "fb1885f48ea46164a10568aeff51884389f67ae3" } # 0.2.5
+  apb:                 { git: "https://github.com/pulp-platform/apb.git",                 rev: "6ae8bf8d5eab5dc70d032231c01ab95e1c5774b9" }
+  obi:                 { git: "https://github.com/pulp-platform/obi.git",                 rev: "b69af4aa00630efd14b1c5cbf9bac977f23ce840" }
+  axi_stream:          { git: "https://github.com/pulp-platform/axi_stream.git",          rev: "ce1547861f99ab3d8834d04aa36d2d4184a28df7" }
+  tech_cells_generic:  { git: "https://github.com/pulp-platform/tech_cells_generic.git",  rev: "3a3de73632a06826b1bd9c65a0a2e92b32016845" } # 0.2.14
+
+sources:
+  - target: tpu
+    files:
+      - rtl/common/tpu_pkg.sv
+      - rtl/memory/ram_tdp.sv
+      - rtl/memory/fifo_ram.sv
+      - rtl/memory/unified_buffer.sv
+      - rtl/memory/accumulators.sv
+      - rtl/memory/stream_window.sv
+      - rtl/top/tpu_fabric.sv
+  - target: m0_elab
+    files:
+      - rtl/common/tpu_m0_pkg.sv
+      - rtl/control/idma_request_arbiter.sv
+      - rtl/top/idma_subsystem.sv
+      - rtl/top/m0_idma_elab_top.sv
+  - target: m0_board
+    files:
+      - rtl/top/m0_board_top.sv
+  - target: m5_elab
+    files:
+      - rtl/top/m5_idma_elab_top.sv
+  - target: m0_sim
+    files:
+      - tb/idma_standalone/tb_m0_idma_smoke.sv
+      - tb/idma_standalone/tb_m1_idma.sv
+      - tb/system/tb_m2_fabric.sv
+  - target: kv260
+    files:
+      - rtl/top/kv260_top.sv
+  - target: m3
+    files:
+      - rtl/compute/mac_pe_ws.sv
+      - rtl/compute/systolic_array.sv
+      - rtl/compute/data_setup.sv
+      - rtl/compute/output_deskew.sv
+      - rtl/compute/weight_loader.sv
+      - rtl/compute/matrix_unit.sv
+  - target: m3_sim
+    files:
+      - tb/compute/tb_matrix_unit.sv
+  - target: m4
+    files:
+      - rtl/activation/act_params.sv
+      - rtl/activation/requant_lane.sv
+      - rtl/activation/activation_unit.sv
+      - rtl/activation/pool_unit.sv
+      - rtl/control/perf_counters.sv
+      - rtl/control/decoder.sv
+      - rtl/control/conv_address_gen.sv
+      - rtl/control/matmul_seq.sv
+      - rtl/control/act_seq.sv
+      - rtl/top/tpu_core.sv
+  - target: m4_sim
+    files:
+      - tb/core/tb_tpu_core.sv
+      - tb/activation/tb_activation_unit.sv
+  - target: m6_sim
+    files:
+      - tb/control/tb_conv_address_gen.sv
+      - tb/activation/tb_pool_unit.sv
+      - tb/activation/tb_act_seq_pool.sv
+  - target: m6_ooc
+    files:
+      - tb/activation/act_pool_ooc_top.sv     # synthesis-only wrapper, never simulated
