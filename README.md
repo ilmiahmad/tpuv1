@@ -1,6 +1,6 @@
 # TPU-KV260
 
-A small INT8 neural-network accelerator modelled on Google's TPU v1 (Jouppi et al., ISCA 2017), built for the Kria KV260 board. It comes with a Linux driver, a compiler from quantized models to accelerator programs, and a golden model that every test is checked against.
+A small INT8 neural-network accelerator modelled on Google's TPU v1 [(Jouppi et al., ISCA 2017)](https://arxiv.org/abs/1704.04760), built for the Kria KV260 board. It comes with a Linux driver, a compiler from quantized models to accelerator programs, and a golden model that every test is checked against.
 
 It runs MLPs and small CNNs on the board today. It is not a general inference engine yet; see [Limitations](#limitations).
 
